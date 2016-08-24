@@ -1,9 +1,6 @@
 require 'spec_utils'
 require 'rubygems'
 
-# Require a fake implementation of the Paypal service
-require_relative './services/paypal_service/fake_api_implementation'
-
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 
@@ -41,6 +38,9 @@ prefork = lambda {
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
   require "email_spec"
+
+  # Require a fake implementation of the Paypal service
+  require_relative './services/paypal_service/api/fake_api_implementation'
 
   # Requires supporting files with custom matchers and macros, etc,
   # in ./support/ and its subdirectories.

@@ -35,7 +35,9 @@ module Kassi
     config.autoload_paths += Dir[Rails.root.join('app', 'view_utils')]
     config.autoload_paths += Dir[Rails.root.join('app', 'forms')]
     config.autoload_paths += Dir[Rails.root.join('app', 'validators')]
-    config.autoload_paths += Dir[Rails.root.join('spec', 'services', 'paypal_service')]
+
+    # TODO Remove this before merging!
+    config.autoload_paths += Dir[Rails.root.join('spec', 'services')]
 
     # Load also Jobs that are used by migrations
     config.autoload_paths += Dir[Rails.root.join('db', 'migrate_jobs', '**/')]
