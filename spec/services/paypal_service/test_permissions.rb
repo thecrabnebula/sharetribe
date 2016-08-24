@@ -68,13 +68,14 @@ module PaypalService
           output_transformer: -> (res, api) {
             req = res[:value]
             token = @fake_pal.save_permission_token(req)
+            uri = URI(req[:callback])
+            redirect_url = "#{uri.scheme}://#{uri.host}#{uri.port ? ':' + uri.port.to_s : ''}#{uri.path}"
 
             DataTypes::Permissions.create_req_perm_response(
               {
                 username_to: api.config.subject,
                 request_token: token[:request_token],
-                # redirect_url: "https://paypaltest.com/?token=#{token[:request_token]}"
-                redirect_url: "#{req[:callback]}&token=#{token[:request_token]}"
+                redirect_url: "#{redirect_url}?token=#{token[:request_token]}"
               })
           }
         ),

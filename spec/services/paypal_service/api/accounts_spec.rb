@@ -241,7 +241,7 @@ describe PaypalService::API::Accounts do
 
       with_success(response) { |data|
         redirect_endpoint, token = parse_redirect_url(data[:redirect_url])
-        expect(redirect_endpoint).to eq "https://test.com/gb/request?email=#{@email}&payer_id=#{@payer_id}"
+        expect(redirect_endpoint).to eq "https://test.com/gb/request"
         expect_token(token)
       }
     end
@@ -251,7 +251,7 @@ describe PaypalService::API::Accounts do
 
       with_success(response) { |data|
         redirect_endpoint, token = parse_redirect_url(data[:redirect_url])
-        expect(redirect_endpoint).to eq "https://test.com/gb/request?email=#{@email}&payer_id=#{@payer_id}"
+        expect(redirect_endpoint).to eq "https://test.com/gb/request"
         expect_token(token)
       }
     end
