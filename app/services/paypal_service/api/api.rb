@@ -3,6 +3,8 @@ module PaypalService::API
     if Rails.env.test?
       FakeApiImplementation
     else
-      ApiImplementation
+      require "#{Rails.root}/spec/services/paypal_service/fake_api_implementation"
+      FakeApiImplementation
+      # ApiImplementation
     end
 end

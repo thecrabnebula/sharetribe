@@ -16,7 +16,7 @@ describe PaypalService::API::Accounts do
         person_id: @mid,
         # For testing purposes, add 'email' and 'payer_id' query params.
         # That way we can inject them to our fake PayPal
-        callback_url: "http://test.com/request?email=#{email}&payer_id=#{payer_id}",
+        callback_url: "https://test.com/request?email=#{email}&payer_id=#{payer_id}",
         country: @country
       }),
       flow: flow)
@@ -32,7 +32,7 @@ describe PaypalService::API::Accounts do
         community_id: @cid,
         # For testing purposes, add 'email' and 'payer_id' query params.
         # That way we can inject them to our fake PayPal
-        callback_url: "http://test.com/request?email=#{email}&payer_id=#{payer_id}",
+        callback_url: "https://test.com/request?email=#{email}&payer_id=#{payer_id}",
         country: @country
       }),
       flow: flow)
@@ -221,7 +221,7 @@ describe PaypalService::API::Accounts do
     # Test version of merchant and permission clients
     PaypalService::API::Api.reset!
     @api_builder = PaypalService::API::Api.api_builder
-    @accounts = PaypalService::API::Api.accounts
+    @accounts = PaypalService::API::Api.build_test_accounts(prepend_country_code: true)
 
     # Test data
 
@@ -241,7 +241,7 @@ describe PaypalService::API::Accounts do
 
       with_success(response) { |data|
         redirect_endpoint, token = parse_redirect_url(data[:redirect_url])
-        expect(redirect_endpoint).to eq "https://paypaltest.com/gb/"
+        expect(redirect_endpoint).to eq "https://test.com/gb/request?email=#{@email}&payer_id=#{@payer_id}"
         expect_token(token)
       }
     end
@@ -251,7 +251,7 @@ describe PaypalService::API::Accounts do
 
       with_success(response) { |data|
         redirect_endpoint, token = parse_redirect_url(data[:redirect_url])
-        expect(redirect_endpoint).to eq "https://paypaltest.com/gb/"
+        expect(redirect_endpoint).to eq "https://test.com/gb/request?email=#{@email}&payer_id=#{@payer_id}"
         expect_token(token)
       }
     end

@@ -2,20 +2,31 @@ require_relative 'test_events'
 require_relative 'test_logger'
 require_relative 'test_merchant'
 require_relative 'test_permissions'
+require_relative '../../../app/services/paypal_service/paypal_service_injector'
 
 # Rewrite PaypalService::API::Api to inject test paypal client
 module PaypalService::API
   class FakeApiImplementation
+    extend PaypalService::PaypalServiceInjector
+
     def self.payments
       @payments ||= build_test_payments
     end
 
-    def self.accounts
-      @accounts ||= build_test_accounts
-    end
-
     def self.billing_agreements
       @billing_agreements ||= build_billing_agreements
+    end
+
+    def self.minimum_commissions
+      minimum_commissions_api
+    end
+
+    def self.process
+      raise NotImplementedError.new("self.process not implemented for FakeApiImplementation")
+    end
+
+    def self.accounts
+      @accounts ||= build_test_accounts
     end
 
     def self.events
@@ -56,12 +67,13 @@ module PaypalService::API
         PaypalService::TestLogger.new)
     end
 
-    def self.build_test_accounts
+    def self.build_test_accounts(prepend_country_code: false)
       PaypalService::API::Accounts.new(
         test_permissions,
         test_merchant,
         test_onboarding,
-        PaypalService::TestLogger.new)
+        PaypalService::TestLogger.new,
+        prepend_country_code: prepend_country_code)
     end
 
     def self.build_billing_agreements

@@ -14,7 +14,10 @@ module PaypalService
     end
 
     def save_permission_token(req)
-      details = parse_details_from_url(req[:callback])
+      details = parse_details_from_url(req[:callback]) || {
+        "email" => "payer_email@example.com",
+        "payer_id" => "payer_id"
+      }
 
       token = {
         request_token: SecureRandom.uuid,
@@ -28,8 +31,13 @@ module PaypalService
     end
 
     def parse_details_from_url(callback_url)
-      hash_of_arrays = CGI.parse(URI.parse(callback_url).query)
-      HashUtils.map_values(hash_of_arrays) { |val| val.first }
+      query = URI.parse(callback_url).query
+      if query
+        hash_of_arrays = CGI.parse(query)
+        HashUtils.map_values(hash_of_arrays) { |val| val.first }
+      else
+        nil
+      end
     end
 
     def by_request_token(request_token)
@@ -65,7 +73,8 @@ module PaypalService
               {
                 username_to: api.config.subject,
                 request_token: token[:request_token],
-                redirect_url: "https://paypaltest.com/?token=#{token[:request_token]}"
+                # redirect_url: "https://paypaltest.com/?token=#{token[:request_token]}"
+                redirect_url: "#{req[:callback]}&token=#{token[:request_token]}"
               })
           }
         ),
