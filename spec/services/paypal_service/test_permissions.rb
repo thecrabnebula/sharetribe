@@ -70,12 +70,13 @@ module PaypalService
             token = @fake_pal.save_permission_token(req)
             uri = URI(req[:callback])
             redirect_url = "#{uri.scheme}://#{uri.host}#{uri.port ? ':' + uri.port.to_s : ''}#{uri.path}"
+            verification_code = SecureRandom.uuid
 
             DataTypes::Permissions.create_req_perm_response(
               {
                 username_to: api.config.subject,
                 request_token: token[:request_token],
-                redirect_url: "#{redirect_url}?token=#{token[:request_token]}"
+                redirect_url: "#{redirect_url}?token=#{token[:request_token]}&verification_code=#{verification_code}&request_token=#{token[:request_token]}"
               })
           }
         ),

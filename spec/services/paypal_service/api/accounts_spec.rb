@@ -157,7 +157,8 @@ describe PaypalService::API::Accounts do
 
   ## Helpers
 
-  # For testing purpose, let's agree on simple URL schema
+  # Takes a callback URL and returns parsed version, that is, a tuple of URL
+  # without query part and the token
   #
   # https://<what_ever>?token=<36 chars length token>
   #
@@ -165,7 +166,17 @@ describe PaypalService::API::Accounts do
   #
   # Returs: ["https://paypaltest.com/billing_agreement", "3252be6f-e606-41df-a3b7-3eae625be9ac"]
   def parse_redirect_url(url)
-    url.split("?token=")
+    uri = URI(url)
+
+    token = Maybe(URI(url).query).map { |query_string|
+      Maybe(CGI::parse(query_string)["token"]).map { |token_value_array|
+        token_value_array.first
+      }.or_else(nil)
+    }.or_else(nil)
+
+    path_without_query = "#{uri.scheme}://#{uri.host}#{uri.path}"
+
+    [path_without_query, token]
   end
 
   def parse_redirect_url_from_response(res)
