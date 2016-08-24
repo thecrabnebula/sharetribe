@@ -108,8 +108,8 @@ describe PaypalService::API::Accounts do
       person_id: @mid,
       body: {
         description: "Let marketplace X take commissions",
-        success_url: "http://test.com/billing_agreement/success",
-        cancel_url: "http://test.com/billing_agreement/cancel"
+        success_url: "https://test.com/billing_agreement/success",
+        cancel_url: "https://test.com/billing_agreement/cancel"
       }
     )
   end
@@ -630,7 +630,7 @@ describe PaypalService::API::Accounts do
 
       with_success(response) { |data|
         redirect_endpoint, token = parse_redirect_url(data[:redirect_url])
-        expect(redirect_endpoint).to eq "https://paypaltest.com/billing_agreement"
+        expect(redirect_endpoint).to eq "https://test.com/billing_agreement/success"
         expect_token(token)
       }
 

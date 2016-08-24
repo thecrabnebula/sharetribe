@@ -24,7 +24,7 @@ module PaypalService
       end
 
       def self.process
-        raise NotImplementedError.new("self.process not implemented for FakeApiImplementation")
+        process_api
       end
 
       def self.accounts
