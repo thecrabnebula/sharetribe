@@ -2,13 +2,21 @@ module FeatureTests
   module Data
     module_function
 
-    def create_marketplace()
+    def create_marketplace(payment_gateway:)
       # TODO Change this! Use IntApi instead of FactoryGirl!
 
       c = FactoryGirl.create(:community,
                              consent: "SHARETRIBE1.0")
 
       MarketplaceService::API::Marketplaces::Helper.create_processes!(c.id, :preauthorize)
+
+      if payment_gateway
+        TransactionService::API::Api.settings.provision(
+          community_id: c.id,
+          payment_gateway: payment_gateway,
+          payment_process: :preauthorize,
+          active: true)
+      end
 
       {
         id: c.id,
