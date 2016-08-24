@@ -1,19 +1,19 @@
 Then("I expect transaction with PayPal test to pass") do
+  login_page = FeatureTests::Page::Login
+  topbar = FeatureTests::Page::Topbar
+  navigation = FeatureTests::Navigation
+
   marketplace = FeatureTests::Data.create_marketplace()
   admin = FeatureTests::Data.create_member(username: "paypal_admin", marketplace_id: marketplace[:id], admin: true)
   member = FeatureTests::Data.create_member(username: "paypal_buyer", marketplace_id: marketplace[:id], admin: false)
 
-  FeatureTests::Navigation.navigate_in_marketplace!(ident: marketplace[:ident])
-
+  navigation.navigate_in_marketplace!(ident: marketplace[:ident])
   visit("/")
 
-  find(".header").click_link("Log in")
+  topbar.click_login_link
+  login_page.fill_and_submit(username: admin[:username], password: admin[:password])
+  topbar.navigate_to_admin
 
-  fill_in("main_person_login", with: admin[:username])
-  fill_in("main_person_password", with: admin[:password])
-  find("#main_log_in_button").click
-
-  binding.pry
   save_screenshot("tmp/screenshots/dev.png")
 end
 

@@ -3,8 +3,12 @@ module FeatureTests
     module_function
 
     def create_marketplace()
+      # TODO Change this! Use IntApi instead of FactoryGirl!
+
       c = FactoryGirl.create(:community,
                              consent: "SHARETRIBE1.0")
+
+      MarketplaceService::API::Marketplaces::Helper.create_processes!(c.id, :preauthorize)
 
       {
         id: c.id,
