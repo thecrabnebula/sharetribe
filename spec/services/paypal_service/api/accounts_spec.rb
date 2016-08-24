@@ -1,4 +1,4 @@
-require_relative '../api'
+require 'spec_helper'
 
 describe PaypalService::API::Accounts do
 

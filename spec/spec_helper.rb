@@ -1,6 +1,9 @@
 require 'spec_utils'
 require 'rubygems'
 
+# Require a fake implementation of the Paypal service
+require_relative './services/paypal_service/fake_api_implementation'
+
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 

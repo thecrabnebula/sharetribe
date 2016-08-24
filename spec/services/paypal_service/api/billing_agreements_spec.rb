@@ -1,5 +1,3 @@
-require_relative '../api'
-
 describe PaypalService::API::BillingAgreements do
 
   AccountStore = PaypalService::Store::PaypalAccount

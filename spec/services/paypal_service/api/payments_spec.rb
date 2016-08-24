@@ -1,5 +1,3 @@
-require_relative '../api'
-
 describe PaypalService::API::Payments do
 
   TokenStore = PaypalService::Store::Token
