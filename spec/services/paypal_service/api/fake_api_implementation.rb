@@ -12,7 +12,7 @@ module PaypalService
       extend PaypalService::PaypalServiceInjector
 
       def self.payments
-        @payments ||= build_test_payments
+        @payments ||= build_test_payments(allow_async: false, events: events)
       end
 
       def self.billing_agreements
@@ -29,10 +29,6 @@ module PaypalService
 
       def self.accounts
         @accounts ||= build_test_accounts(prepend_country_code: false)
-      end
-
-      def self.events
-        @events ||= PaypalService::TestEvents.new
       end
 
       def self.api_builder
@@ -62,11 +58,16 @@ module PaypalService
         @api_builder = nil
       end
 
-      def self.build_test_payments
+      def self.build_test_events
+        PaypalService::TestEvents.new
+      end
+
+      def self.build_test_payments(allow_async: true, events:)
         payments = PaypalService::API::Payments.new(
           events,
           test_merchant,
-          PaypalService::TestLogger.new)
+          PaypalService::TestLogger.new,
+          allow_async: allow_async)
       end
 
       def self.build_test_accounts(prepend_country_code: false)
